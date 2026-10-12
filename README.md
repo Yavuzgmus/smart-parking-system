@@ -1,115 +1,117 @@
-# 🅿️ Akıllı Otopark Sistemi
+# 🅿️ Smart Parking System
 
-Kamera görüntüsünden **Türk plakalarını otomatik okuyan**, araç giriş/çıkışlarını kaydeden, araçlara boş park yeri atayan ve kalınan süreye göre **ücret hesaplayan** bir otopark yönetim sistemi.
+A parking management system that **automatically reads Turkish license plates** from a camera feed, logs vehicle entries and exits, assigns each vehicle a free parking spot and **calculates the fee** based on how long it stayed.
 
-![Otopark haritası](docs/ekran_harita.png)
+![Parking map](docs/ekran_harita.png)
 
-## Özellikler
+> The user interface is in Turkish.
 
-- **Plaka tanıma:** Roboflow üzerinde eğitilmiş bir YOLO modeli plakanın yerini bulur, EasyOCR plakayı okur.
-- **Türk plakası doğrulama:** Okunan metin il kodu, harf ve rakam kurallarına göre denetlenir. `O/0`, `I/1`, `B/8` gibi OCR karışıklıkları otomatik düzeltilir.
-- **Otomatik giriş/çıkış:** İçeride olmayan araç için giriş kaydı açılır ve rastgele boş bir slot atanır. Aynı araç tekrar okunduğunda çıkış yapılır ve ücret hesaplanır.
-- **Masaüstü yönetim paneli (PyQt6):**
-  - Canlı kamera görüntüsü, okunan plakanın üzerinde renkli çerçeve
-  - 3 kat × 10 slotluk canlı otopark haritası
-  - Doluluk, içerideki araç sayısı, günlük giriş ve gelir kartları
-  - Plaka arama (eşleşen araçların slotları haritada vurgulanır)
-  - Araç kayıtları tablosu, filtreleme ve CSV (Excel) olarak dışa aktarma
-  - Fotoğraftan plaka okuma, elle plaka girişi, elle çıkış
-- **Hatalı işlemlere karşı koruma:** Aynı plaka 10 saniye içinde tekrar okunursa yok sayılır. Otopark doluyken araç içeri alınmaz.
+## Features
 
-![Araç kayıtları](docs/ekran_kayitlar.png)
+- **License plate recognition:** a YOLO model trained on Roboflow locates the plate, and EasyOCR reads the characters.
+- **Turkish plate validation:** the text is checked against Turkish plate rules (province code, letters, digits). Common OCR mix-ups such as `O/0`, `I/1` and `B/8` are corrected automatically.
+- **Automatic entry and exit:** a vehicle that is not inside gets an entry record and a random free spot. When the same vehicle is read again, it is checked out and its fee is calculated.
+- **Desktop dashboard (PyQt6):**
+  - Live camera feed with a colored box around the detected plate
+  - Live parking map with 3 floors × 10 spots
+  - Cards for occupancy, vehicles inside, today's entries and today's revenue
+  - Plate search that highlights matching spots on the map
+  - Vehicle log table with filtering and CSV (Excel) export
+  - Plate reading from a photo, manual plate entry and manual checkout
+- **Protection against mistakes:** if the same plate is read again within 10 seconds, the read is ignored. When the lot is full, the vehicle is not let in.
 
-## Kullanılan teknolojiler
+![Vehicle log](docs/ekran_kayitlar.png)
 
-| Alan | Teknoloji |
+## Tech stack
+
+| Area | Technology |
 |---|---|
-| Plaka tespiti | Roboflow `inference`, YOLO modeli (`turkish-license-plate/8`) |
-| Karakter okuma | EasyOCR |
-| Görüntü işleme | OpenCV, NumPy |
-| Arayüz | PyQt6 |
-| Veritabanı | SQLite (WAL modu) |
+| Plate detection | Roboflow `inference`, YOLO model (`turkish-license-plate/8`) |
+| Character recognition | EasyOCR |
+| Image processing | OpenCV, NumPy |
+| User interface | PyQt6 |
+| Database | SQLite (WAL mode) |
 
-## Kurulum
+## Installation
 
-**Gereksinim:** Python 3.10 veya üstü
+**Requirement:** Python 3.10 or newer
 
 ```bash
-git clone https://github.com/Yavuzgmus/TermProject.git
-cd TermProject
+git clone https://github.com/Yavuzgmus/akilli-otopark.git
+cd akilli-otopark
 pip install -r requirements.txt
 ```
 
-Roboflow API anahtarını ayarlayın: Proje kök klasöründeki `.env.example` dosyasını `.env` adıyla kopyalayın ve anahtarınızı yazın.
+Set your Roboflow API key: copy `.env.example` in the project root to a file named `.env` and fill in your key.
 
 ```
-ROBOFLOW_API_KEY=buraya_anahtarinizi_yazin
+ROBOFLOW_API_KEY=your_api_key_here
 ```
 
-> `.env` dosyası `.gitignore`'da olduğu için GitHub'a gönderilmez.
+> `.env` is listed in `.gitignore`, so it is never pushed to GitHub.
 
-## Kullanım
+## Usage
 
 ```bash
 python src/otopark_arayuz.py
 ```
 
-Veritabanı (`otopark.db`) ilk açılışta otomatik oluşturulur.
+The database (`otopark.db`) is created automatically on first launch.
 
-| Kısayol | İşlev |
+| Shortcut | Action |
 |---|---|
-| `Boşluk` | Kameradaki plakayı oku |
-| `Ctrl+F` | Plaka ara |
-| `F5` | Verileri yenile |
-| Dolu slota sağ tık | Elle çıkış yap |
-| Kayıt tablosunda sağ tık | Kaydı sil |
+| `Space` | Read the plate in the camera view |
+| `Ctrl+F` | Search for a plate |
+| `F5` | Refresh data |
+| Right-click an occupied spot | Check the vehicle out manually |
+| Right-click a row in the log table | Delete the record |
 
-### Diğer betikler
+### Other scripts
 
 ```bash
-python src/canli_kamera.py                          # Basit OpenCV penceresiyle konsol modu
-python src/yolo_plaka_tanima.py foto.jpg            # Fotoğraftan plaka oku ve kaydet
-python src/yolo_plaka_tanima.py foto.jpg --kaydetme # Sadece oku, veritabanına yazma
-python src/veritabani_kurulum.py                    # Veritabanını elle kur / güncelle
-python src/kayit_sil.py --id 7                      # Tek kaydı sil
-python src/kayit_sil.py --hepsi                     # Tüm kayıtları sil
+python src/canli_kamera.py                          # Console mode with a simple OpenCV window
+python src/yolo_plaka_tanima.py photo.jpg           # Read a plate from a photo and record it
+python src/yolo_plaka_tanima.py photo.jpg --kaydetme # Read only, do not write to the database
+python src/veritabani_kurulum.py                    # Set up / migrate the database manually
+python src/kayit_sil.py --id 7                      # Delete a single record
+python src/kayit_sil.py --hepsi                     # Delete all records
 ```
 
-## Proje yapısı
+## Project structure
 
 ```
-TermProject/
+akilli-otopark/
 ├── src/
-│   ├── otopark_arayuz.py      # Ana masaüstü uygulaması (PyQt6)
-│   ├── plaka_okuma.py         # Plaka tespiti + OCR + Türk plakası doğrulama
-│   ├── veritabani.py          # SQLite işlemleri: giriş/çıkış, slotlar, istatistikler
-│   ├── ayarlar.py             # Tüm ayarlar (kat/slot sayısı, ücret, model, kamera)
-│   ├── canli_kamera.py        # Konsol modu
-│   ├── yolo_plaka_tanima.py   # Fotoğraftan okuma
-│   ├── kayit_sil.py           # Kayıt silme aracı
-│   └── veritabani_kurulum.py  # Veritabanı kurulumu
-├── docs/                      # Ekran görüntüleri
-├── .env.example               # Örnek ayar dosyası
+│   ├── otopark_arayuz.py      # Main desktop application (PyQt6)
+│   ├── plaka_okuma.py         # Plate detection + OCR + Turkish plate validation
+│   ├── veritabani.py          # SQLite layer: entry/exit, spots, statistics
+│   ├── ayarlar.py             # All settings (floors, spots, pricing, model, camera)
+│   ├── canli_kamera.py        # Console mode
+│   ├── yolo_plaka_tanima.py   # Read plates from a photo
+│   ├── kayit_sil.py           # Record deletion tool
+│   └── veritabani_kurulum.py  # Database setup
+├── docs/                      # Screenshots
+├── .env.example               # Example settings file
 ├── requirements.txt
 └── README.md
 ```
 
-`.env` ve `otopark.db` proje kök klasöründe durur; komutları kök klasörden çalıştırın.
+`.env` and `otopark.db` live in the project root, so run the commands from the root folder.
 
-## Ayarlar
+## Configuration
 
-Kat sayısı, slot sayısı, ücret tarifesi ve tanıma eşiği [`src/ayarlar.py`](src/ayarlar.py) içindedir. Şu değerler `.env` dosyasından veya ortam değişkenlerinden de verilebilir:
+The number of floors and spots, the pricing and the detection threshold are defined in [`src/ayarlar.py`](src/ayarlar.py). The following values can also be set in `.env` or as environment variables:
 
-| Değişken | Açıklama | Varsayılan |
+| Variable | Description | Default |
 |---|---|---|
-| `ROBOFLOW_API_KEY` | Roboflow API anahtarı | — (zorunlu) |
-| `OTOPARK_DB` | Veritabanı dosyasının yolu | `./otopark.db` |
-| `OTOPARK_KAMERA` | Kamera numarası | `0` |
+| `ROBOFLOW_API_KEY` | Roboflow API key | — (required) |
+| `OTOPARK_DB` | Path to the database file | `./otopark.db` |
+| `OTOPARK_KAMERA` | Camera index | `0` |
 
-**Ücretlendirme:** giriş ücreti 20 ₺ + kalınan her saniye için 0,10 ₺ (demo tarifesi, `src/ayarlar.py` içinden değiştirilebilir).
+**Pricing:** a 20 ₺ entry fee plus 0.10 ₺ for every second parked. This is a demo rate and can be changed in `src/ayarlar.py`.
 
-## Veritabanı şeması
+## Database schema
 
-**`arac_kayitlari`:** `id`, `plaka`, `giris_zamani`, `cikis_zamani`, `ucret`, `durum` (`İçeride` / `Çıkış Yaptı`), `slot_no`
+**`arac_kayitlari`** (vehicle log): `id`, `plaka` (plate), `giris_zamani` (entry time), `cikis_zamani` (exit time), `ucret` (fee), `durum` (status: `İçeride` = inside / `Çıkış Yaptı` = checked out), `slot_no`
 
-**`otopark_slotlari`:** `slot_id`, `kat`, `kat_slot_no`, `slot_etiketi` (ör. `K2-S5`), `durum` (`Boş` / `Dolu`), `park_eden_plaka`
+**`otopark_slotlari`** (parking spots): `slot_id`, `kat` (floor), `kat_slot_no` (spot number on the floor), `slot_etiketi` (label, e.g. `K2-S5`), `durum` (status: `Boş` = free / `Dolu` = occupied), `park_eden_plaka` (plate of the parked vehicle)
