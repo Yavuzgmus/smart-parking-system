@@ -35,7 +35,7 @@ Kamera görüntüsünden **Türk plakalarını otomatik okuyan**, araç giriş/�
 **Gereksinim:** Python 3.10 veya üstü
 
 ```bash
-git clone https://github.com/KULLANICI_ADI/TermProject.git
+git clone https://github.com/Yavuzgmus/TermProject.git
 cd TermProject
 pip install -r requirements.txt
 ```
