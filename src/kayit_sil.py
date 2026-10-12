@@ -1,8 +1,8 @@
 """
 Araç kayıtlarını silme aracı.
 
-    python kayit_sil.py --id 7      → tek bir kaydı siler
-    python kayit_sil.py --hepsi     → tüm kayıtları siler, ID sayacını sıfırlar, slotları boşaltır
+    python src/kayit_sil.py --id 7      → tek bir kaydı siler
+    python src/kayit_sil.py --hepsi     → tüm kayıtları siler, ID sayacını sıfırlar, slotları boşaltır
     (-y eklenirse onay sorulmaz)
 """
 import argparse

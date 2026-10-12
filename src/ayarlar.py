@@ -11,7 +11,8 @@ dosyasıyla değiştirilebilir (örnek için .env.example dosyasına bakın):
 import os
 from pathlib import Path
 
-PROJE_KLASORU = Path(__file__).resolve().parent
+# Kodlar src/ içinde; .env ve otopark.db proje kök klasöründe durur.
+PROJE_KLASORU = Path(__file__).resolve().parent.parent
 
 
 def _env_dosyasini_yukle(yol: Path):

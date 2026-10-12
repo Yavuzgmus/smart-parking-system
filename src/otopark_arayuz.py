@@ -1,7 +1,7 @@
 """
 Akıllı Otopark — masaüstü yönetim paneli (PyQt6).
 
-Çalıştırma:  python otopark_arayuz.py
+Çalıştırma:  python src/otopark_arayuz.py
 
 Kısayollar:
     Boşluk   → kameradaki plakayı oku

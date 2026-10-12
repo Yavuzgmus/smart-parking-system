@@ -40,7 +40,7 @@ cd TermProject
 pip install -r requirements.txt
 ```
 
-Roboflow API anahtarını ayarlayın: `.env.example` dosyasını `.env` adıyla kopyalayın ve anahtarınızı yazın.
+Roboflow API anahtarını ayarlayın: Proje kök klasöründeki `.env.example` dosyasını `.env` adıyla kopyalayın ve anahtarınızı yazın.
 
 ```
 ROBOFLOW_API_KEY=buraya_anahtarinizi_yazin
@@ -51,7 +51,7 @@ ROBOFLOW_API_KEY=buraya_anahtarinizi_yazin
 ## Kullanım
 
 ```bash
-python otopark_arayuz.py
+python src/otopark_arayuz.py
 ```
 
 Veritabanı (`otopark.db`) ilk açılışta otomatik oluşturulur.
@@ -67,33 +67,38 @@ Veritabanı (`otopark.db`) ilk açılışta otomatik oluşturulur.
 ### Diğer betikler
 
 ```bash
-python canli_kamera.py                      # Basit OpenCV penceresiyle konsol modu
-python yolo_plaka_tanima.py foto.jpg        # Fotoğraftan plaka oku ve kaydet
-python yolo_plaka_tanima.py foto.jpg --kaydetme   # Sadece oku, veritabanına yazma
-python veritabani_kurulum.py                # Veritabanını elle kur / güncelle
-python kayit_sil.py --id 7                  # Tek kaydı sil
-python kayit_sil.py --hepsi                 # Tüm kayıtları sil
+python src/canli_kamera.py                          # Basit OpenCV penceresiyle konsol modu
+python src/yolo_plaka_tanima.py foto.jpg            # Fotoğraftan plaka oku ve kaydet
+python src/yolo_plaka_tanima.py foto.jpg --kaydetme # Sadece oku, veritabanına yazma
+python src/veritabani_kurulum.py                    # Veritabanını elle kur / güncelle
+python src/kayit_sil.py --id 7                      # Tek kaydı sil
+python src/kayit_sil.py --hepsi                     # Tüm kayıtları sil
 ```
 
 ## Proje yapısı
 
 ```
-├── otopark_arayuz.py      # Ana masaüstü uygulaması (PyQt6)
-├── plaka_okuma.py         # Plaka tespiti + OCR + Türk plakası doğrulama
-├── veritabani.py          # SQLite işlemleri: giriş/çıkış, slotlar, istatistikler
-├── ayarlar.py             # Tüm ayarlar (kat/slot sayısı, ücret, model, kamera)
-├── canli_kamera.py        # Konsol modu
-├── yolo_plaka_tanima.py   # Fotoğraftan okuma
-├── kayit_sil.py           # Kayıt silme aracı
-├── veritabani_kurulum.py  # Veritabanı kurulumu
+TermProject/
+├── src/
+│   ├── otopark_arayuz.py      # Ana masaüstü uygulaması (PyQt6)
+│   ├── plaka_okuma.py         # Plaka tespiti + OCR + Türk plakası doğrulama
+│   ├── veritabani.py          # SQLite işlemleri: giriş/çıkış, slotlar, istatistikler
+│   ├── ayarlar.py             # Tüm ayarlar (kat/slot sayısı, ücret, model, kamera)
+│   ├── canli_kamera.py        # Konsol modu
+│   ├── yolo_plaka_tanima.py   # Fotoğraftan okuma
+│   ├── kayit_sil.py           # Kayıt silme aracı
+│   └── veritabani_kurulum.py  # Veritabanı kurulumu
+├── docs/                      # Ekran görüntüleri
+├── .env.example               # Örnek ayar dosyası
 ├── requirements.txt
-├── .env.example           # Örnek ayar dosyası
-└── docs/                  # Ekran görüntüleri
+└── README.md
 ```
+
+`.env` ve `otopark.db` proje kök klasöründe durur; komutları kök klasörden çalıştırın.
 
 ## Ayarlar
 
-Kat sayısı, slot sayısı, ücret tarifesi ve tanıma eşiği [`ayarlar.py`](ayarlar.py) içindedir. Şu değerler `.env` dosyasından veya ortam değişkenlerinden de verilebilir:
+Kat sayısı, slot sayısı, ücret tarifesi ve tanıma eşiği [`src/ayarlar.py`](src/ayarlar.py) içindedir. Şu değerler `.env` dosyasından veya ortam değişkenlerinden de verilebilir:
 
 | Değişken | Açıklama | Varsayılan |
 |---|---|---|
@@ -101,7 +106,7 @@ Kat sayısı, slot sayısı, ücret tarifesi ve tanıma eşiği [`ayarlar.py`](a
 | `OTOPARK_DB` | Veritabanı dosyasının yolu | `./otopark.db` |
 | `OTOPARK_KAMERA` | Kamera numarası | `0` |
 
-**Ücretlendirme:** giriş ücreti 20 ₺ + kalınan her saniye için 0,10 ₺ (demo tarifesi, `ayarlar.py` içinden değiştirilebilir).
+**Ücretlendirme:** giriş ücreti 20 ₺ + kalınan her saniye için 0,10 ₺ (demo tarifesi, `src/ayarlar.py` içinden değiştirilebilir).
 
 ## Veritabanı şeması
 

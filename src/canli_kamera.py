@@ -1,6 +1,6 @@
 """
 Basit OpenCV penceresiyle canlı plaka okuma (konsol modu).
-Tam özellikli arayüz için:  python otopark_arayuz.py
+Tam özellikli arayüz için:  python src/otopark_arayuz.py
 
 Tuşlar:  [SPACE] plakayı oku   [S] plaka sorgula   [Q] çıkış
 """

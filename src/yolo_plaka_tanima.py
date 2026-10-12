@@ -1,8 +1,8 @@
 """
 Bir fotoğraftaki plakayı okur ve (isteğe bağlı) giriş/çıkış olarak kaydeder.
 
-    python yolo_plaka_tanima.py test_photos/test_arac2.jpg
-    python yolo_plaka_tanima.py foto.jpg --kaydetme     → sadece okur, veritabanına yazmaz
+    python src/yolo_plaka_tanima.py test_photos/test_arac2.jpg
+    python src/yolo_plaka_tanima.py foto.jpg --kaydetme     → sadece okur, veritabanına yazmaz
 """
 import argparse
 import logging
