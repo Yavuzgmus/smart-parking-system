@@ -1,0 +1,5 @@
+PyQt6>=6.5
+opencv-python>=4.8
+numpy>=1.24
+easyocr>=1.7
+inference>=0.20
